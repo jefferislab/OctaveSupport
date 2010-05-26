@@ -1,0 +1,10 @@
+
+To build the bindings, run:
+make
+
+To run the tests, run:
+make check
+
+To regenerate the bindings, run:
+PATH=~/path/to/swig/bin:$PATH ./configure --with-swig && make
+
