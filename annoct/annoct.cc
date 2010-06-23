@@ -13,6 +13,7 @@ DEFUN_DLD(annoct, args, nargout,
 		return octave_value_list();
 
     Matrix data(args(0).matrix_value()); // data points
+	double *data_as_double_array = data.fortran_vec();
     Matrix query(args(1).matrix_value()); // query points
 	double eps = args(3).double_value(); // error bound for approx search
 
@@ -28,16 +29,15 @@ DEFUN_DLD(annoct, args, nargout,
 	
 	ANNkd_tree		*the_tree;	// Search structure
 
-	ANNpointArray data_pts 	= annAllocPts(nd,d);		// Allocate data points
-	
-	double *data_as_double_array = data.fortran_vec();
-
-	for(int i = 0; i < nd; i++) // now construct the points
-	{
-		for(int j = 0; j < d; j++)
-		{
-			data_pts[i][j]=data_as_double_array[i*d+j];
-		}
+	// ANNkd_tree expects an ANNpointArray which is a dimensionless array
+	// of type ANNcoord** ie usually double**
+	ANNpointArray data_pts = new ANNpoint[nd];
+    
+	// annAllocPts would allocate new space for the coordinates
+	// But we can save memory by backing the ANNpointArray with
+	// the original octave matrix
+	for (int i = 0; i < nd; i++) {
+		data_pts[i] = &(data_as_double_array[i*d]);
 	}
 
 	the_tree = new ANNkd_tree(data_pts , nd, d);
@@ -48,9 +48,6 @@ DEFUN_DLD(annoct, args, nargout,
 	dims_output(0)=k;dims_output(1)=nq;
 	Matrix dists (dims_output);
 	int32NDArray idx (dims_output);
-
-    // if ( dists == NULL || idx == NULL ) 
-    //     error("annoct:annkSearch","cannot allocate memory for outputs");
     
 	ANNidx * pidx = (ANNidx*) idx.fortran_vec();
     ANNdist* pdist= (ANNdist*) dists.fortran_vec();
@@ -62,6 +59,10 @@ DEFUN_DLD(annoct, args, nargout,
         pidx += k;
         pdist += k;
     }
+
+	// clean up
+	delete [] data_pts;
+	delete the_tree;
 
 	// Return results
 	octave_value_list rvals;
