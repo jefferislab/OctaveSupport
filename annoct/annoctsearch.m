@@ -40,6 +40,15 @@ end
 [dim npts] = size(data);
 
 % TODO convert data to be of supported class if required
+if ~strcmp(class(data),'single')
+	warning('converting data matrix to single')
+	data=single(data);
+end
+
+if ~strcmp(class(query),'single')
+	warning('converting query matrix to single')
+	query=single(query);
+end
 
 if nargin <= 3
 	epsl=0.0;
@@ -70,12 +79,12 @@ end
 
 %%!test fail ('annoctsearch([1, 1],[1, 1],1)', 'ann:open Data must be 2D');
 %!shared pts
-%! pts=[1:20;2:21;22:-1:3];
+%! pts=single([1:20;2:21;22:-1:3]);
 %
 %!test % 2 arg 
 %! [idx,dst]=annoctsearch(pts,pts,2);
 %! assert (idx,int32([1:20;2 1 2 3 4 7 8 7 8 9 12 13 14 13 14 17 18 19 20 19]))
-%! assert (dst,repmat([0;3],1,20))
+%! assert (dst,single(repmat([0;3],1,20)))
 %
 %!test % 1 arg
 %! idx=annoctsearch(pts,pts,2);

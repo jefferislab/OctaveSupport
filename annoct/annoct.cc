@@ -11,9 +11,9 @@ DEFUN_DLD(annoct, args, nargout,
 	if (any_bad_argument(args))
 		return octave_value_list();
 
-    Matrix data(args(0).matrix_value()); // data points
-	double *data_as_double_array = data.fortran_vec();
-    Matrix query(args(1).matrix_value()); // query points
+    FloatMatrix data(args(0).matrix_value()); // data points
+	float *data_as_float_array = data.fortran_vec();
+    FloatMatrix query(args(1).matrix_value()); // query points
 	double eps = args(3).double_value(); // error bound for approx search
 
 	dim_vector dims_d = data.dims();
@@ -36,7 +36,7 @@ DEFUN_DLD(annoct, args, nargout,
 	// But we can save memory by backing the ANNpointArray with
 	// the original octave matrix
 	for (int i = 0; i < nd; i++) {
-		data_pts[i] = &(data_as_double_array[i*d]);
+		data_pts[i] = &(data_as_float_array[i*d]);
 	}
 
 	the_tree = new ANNkd_tree(data_pts , nd, d);
@@ -45,7 +45,7 @@ DEFUN_DLD(annoct, args, nargout,
 	// NB use of dim_vector is required for int32NDArray
 	dim_vector dims_output (2);
 	dims_output(0)=k;dims_output(1)=nq;
-	Matrix dists (dims_output);
+	FloatMatrix dists (dims_output);
 	int32NDArray idx (dims_output);
     
 	ANNidx * pidx = (ANNidx*) idx.fortran_vec();
