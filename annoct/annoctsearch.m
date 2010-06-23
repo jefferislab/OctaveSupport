@@ -69,8 +69,14 @@ idx = idx + 1; % fix zero indexing (C style) from ANN
 end
 
 %%!test fail ('annoctsearch([1, 1],[1, 1],1)', 'ann:open Data must be 2D');
-%!test
+%!shared pts
 %! pts=[1:20;2:21;22:-1:3];
+%
+%!test % 2 arg 
 %! [idx,dst]=annoctsearch(pts,pts,2);
 %! assert (idx,int32([1:20;2 1 2 3 4 7 8 7 8 9 12 13 14 13 14 17 18 19 20 19]))
 %! assert (dst,repmat([0;3],1,20))
+%
+%!test % 1 arg
+%! idx=annoctsearch(pts,pts,2);
+%! assert (idx,int32([1:20;2 1 2 3 4 7 8 7 8 9 12 13 14 13 14 17 18 19 20 19]))
