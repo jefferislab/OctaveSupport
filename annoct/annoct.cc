@@ -12,21 +12,19 @@ DEFUN_DLD(annoct, args, nargout,
 	if (any_bad_argument(args))
 		return octave_value_list();
 
-	const int nargin = args.length ();
-	
-    Matrix data(args(0).matrix_value());
-    Matrix query(args(1).matrix_value());
+    Matrix data(args(0).matrix_value()); // data points
+    Matrix query(args(1).matrix_value()); // query points
+
 	dim_vector dims_d = data.dims();
 	dim_vector dims_q = query.dims();
-
 	double eps = 0.0; // error bound for approx search
 	
 	const int k = args(2).int_value();
-	const int d = args(0).rows(); // dimension of points
+	const int d = dims_d(0); // dimension of points
 	const int nd = dims_d(1);
 	const int nq = dims_q(1); // number of query points
-	octave_stdout<<"There are "<<nd<<" data points and "<<nq<<" query points"<<
-	" of dimension "<<d<<"\n";
+	// octave_stdout<<"There are "<<nd<<" data points and "<<nq<<" query points"<<
+	// " of dimension "<<d<<"\n";
 	
 	ANNkd_tree		*the_tree;	// Search structure
 
@@ -41,10 +39,11 @@ DEFUN_DLD(annoct, args, nargout,
 			data_pts[i][j]=data_as_double_array[i*d+j];
 		}
 	}
-		
+
 	the_tree = new ANNkd_tree(data_pts , nd, d);
 	
     // allocate space for outputs
+	// NB use of dim_vector is required for int32NDArray
 	dim_vector dims_output (2);
 	dims_output(0)=k;dims_output(1)=nq;
 	Matrix dists (dims_output);
