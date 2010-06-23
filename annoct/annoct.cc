@@ -1,23 +1,77 @@
 #include <octave/oct.h>
 #include <math.h>    // math routines
 #include "ANN.h"     // ANN library header
- 
+#include <ov-scalar.h>
+
 static bool
 	any_bad_argument(const octave_value_list& args);
  
-DEFUN_DLD(matpow, args, nargout,
+DEFUN_DLD(annoct, args, nargout,
            "Find k nearest neighbours for each query point from target ")
 {
 	if (any_bad_argument(args))
 		return octave_value_list();
 
 	const int nargin = args.length ();
-	const int k = args(2).int_value();
-
+	
     Matrix data(args(0).matrix_value());
     Matrix query(args(1).matrix_value());
+	dim_vector dims_d = data.dims();
+	dim_vector dims_q = query.dims();
 
-    return octave_value_list();
+	double eps = 0.0; // error bound for approx search
+	
+	const int k = args(2).int_value();
+	const int d = args(0).rows(); // dimension of points
+	const int nd = dims_d(1);
+	const int nq = dims_q(1); // number of query points
+	octave_stdout<<"There are "<<nd<<" data points and "<<nq<<" query points"<<
+	" of dimension "<<d<<"\n";
+	
+	ANNkd_tree		*the_tree;	// Search structure
+
+	ANNpointArray data_pts 	= annAllocPts(nd,d);		// Allocate data points
+	
+	double *data_as_double_array = data.fortran_vec();
+
+	for(int i = 0; i < nd; i++) // now construct the points
+	{
+		for(int j = 0; j < d; j++)
+		{
+			data_pts[i][j]=data_as_double_array[i*d+j];
+		}
+	}
+		
+	the_tree = new ANNkd_tree(data_pts , nd, d);
+	
+    // allocate space for outputs
+	dim_vector dims_output (2);
+	dims_output(0)=k;dims_output(1)=nq;
+	Matrix dists (dims_output);
+	int32NDArray idx (dims_output);
+
+    // if ( dists == NULL || idx == NULL ) 
+    //     error("annoct:annkSearch","cannot allocate memory for outputs");
+    
+	ANNidx * pidx = (ANNidx*) idx.fortran_vec();
+    ANNdist* pdist= (ANNdist*) dists.fortran_vec();
+    ANNpoint pp   = (ANNpoint) query.fortran_vec();
+    
+    for (int j = 0 ; j < nq ; j++ ) {
+        the_tree->annkSearch(pp, k, pidx, pdist, eps);
+        pp += d;
+        pidx += k;
+        pdist += k;
+    }
+
+	// Return results
+	octave_value_list rvals;
+	if(nargout>0)
+		rvals.append(idx);
+	if(nargout>1)
+		rvals.append(dists);
+		
+    return rvals;
 }
 
 static bool
