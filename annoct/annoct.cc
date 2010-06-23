@@ -1,7 +1,6 @@
 #include <octave/oct.h>
 #include <math.h>    // math routines
 #include "ANN.h"     // ANN library header
-#include <ov-scalar.h>
 
 static bool
 	any_bad_argument(const octave_value_list& args);
