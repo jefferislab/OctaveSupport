@@ -113,7 +113,7 @@ any_bad_argument(const octave_value_list& args)
         return true;
     }
 
-    if (floor(args(1).scalar_value()) != args(1).scalar_value())
+    if (floor(args(2).scalar_value()) != args(2).scalar_value())
     {
         error("annoct: k (arg 3) must be an integer.");
         return true;
