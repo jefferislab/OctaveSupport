@@ -17,7 +17,7 @@ distclean: clean
 
 .phony: test
 test: annoct.oct
-	octave --silent test_annoct.m
+	octave --silent --eval 'test annoctsearch'
 
 %.oct: %.cc
-	CXXFLAGS=$(CXXFLAGS) mkoctfile -g -I. -IANN  $< ANN.cpp kd_pr_search.cpp kd_split.cpp kd_util.cpp kd_fix_rad_search.cpp kd_search.cpp kd_tree.cpp kd_dump.cpp bd_pr_search.cpp bd_tree.cpp perf.cpp bd_fix_rad_search.cpp bd_search.cpp brute.cpp
+	CXXFLAGS=$(CXXFLAGS) mkoctfile -I. -IANN  $< ANN.cpp kd_pr_search.cpp kd_split.cpp kd_util.cpp kd_fix_rad_search.cpp kd_search.cpp kd_tree.cpp kd_dump.cpp bd_pr_search.cpp bd_tree.cpp perf.cpp bd_fix_rad_search.cpp bd_search.cpp brute.cpp
