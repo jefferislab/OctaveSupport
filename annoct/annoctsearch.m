@@ -53,8 +53,9 @@ if ~asm
     k = k+1;
 end
 
-[idx dst] = annoct(data, query, k);
+[idx dst] = annoct(data, query, k, epsl);
 
+% remove self matches if we don't want them 
 if ~asm
     gsm = dst(1,:)==0;
     dst(1:end-1,gsm) = dst(2:end,gsm);

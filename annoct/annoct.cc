@@ -14,10 +14,10 @@ DEFUN_DLD(annoct, args, nargout,
 
     Matrix data(args(0).matrix_value()); // data points
     Matrix query(args(1).matrix_value()); // query points
+	double eps = args(3).double_value(); // error bound for approx search
 
 	dim_vector dims_d = data.dims();
 	dim_vector dims_q = query.dims();
-	double eps = 0.0; // error bound for approx search
 	
 	const int k = args(2).int_value();
 	const int d = dims_d(0); // dimension of points
@@ -77,7 +77,7 @@ static bool
 any_bad_argument(const octave_value_list& args)
 {
     
-	if (args.length()!=3)
+	if (args.length()!=4)
     {
         error("annoct: requires three arguments");
         return true;
@@ -116,6 +116,12 @@ any_bad_argument(const octave_value_list& args)
     if (floor(args(1).scalar_value()) != args(1).scalar_value())
     {
         error("annoct: k (arg 3) must be an integer.");
+        return true;
+    }
+
+    if (args(3).scalar_value() < 0.0)
+    {
+        error("annoct: eps (arg 4) must be > 0.0");
         return true;
     }
 
