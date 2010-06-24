@@ -2,7 +2,8 @@
 
 MKOCTFLAGS="-I. -IANN"
 # DEBUG = -O0 -g
-CXXFLAGS = "-Wall $(DEBUG)"
+RELEASE = -O2
+CXXFLAGS = "-Wall $(RELEASE)"
 
 .phony: all
 all: annoct.oct
