@@ -1,4 +1,4 @@
-function [idx, dst] = annoctsearch (data, query, k, epsl, asm)
+function [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
 % Copyright (C)  Gregory Jefferis
 %
 % This program is free software; you can redistribute it and/or modify
@@ -15,18 +15,17 @@ function [idx, dst] = annoctsearch (data, query, k, epsl, asm)
 % along with this program; If not, see <http://www.gnu.org/licenses/>.
 
 % -*- texinfo -*-
-% @deftypefn {Function File} [idx, dst] = annoctsearch (data, query, k, epsl, asm)
-% Short Description
+% @deftypefn {Function File} [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
+% Returns indices (and squared distance) of k nearest neighbours of query in data
 %
 % Long Description
 %
-% @seealso{functions
 % @end deftypefn
 
 % Author:  Gregory Jefferis <jefferis@gmail.com>, shamelessly hacking Shai Bagon's code
 
 if nargin <= 2
-	usage('[idx, dst] = annoctsearch (data, query, k, [epsl, asm])')
+	usage('[idx, dst2] = annoctsearch (data, query, k, [epsl, asm])')
 end
 
 if ~isnumeric(data)
@@ -62,14 +61,14 @@ if ~asm
     k = k+1;
 end
 
-[idx dst] = annoct(data, query, k, epsl);
+[idx dst2] = annoct(data, query, k, epsl);
 
 % remove self matches if we don't want them 
 if ~asm
-    gsm = dst(1,:)==0;
-    dst(1:end-1,gsm) = dst(2:end,gsm);
+    gsm = dst2(1,:)==0;
+    dst2(1:end-1,gsm) = dst2(2:end,gsm);
     idx(1:end-1,gsm) = idx(2:end,gsm);
-    dst(end,:) = [];
+    dst2(end,:) = [];
     idx(end,:) = [];
 end
 
@@ -82,9 +81,9 @@ end
 %! pts=single([1:20;2:21;22:-1:3]);
 %
 %!test % 2 arg 
-%! [idx,dst]=annoctsearch(pts,pts,2);
+%! [idx,dst2]=annoctsearch(pts,pts,2);
 %! assert (idx,int32([1:20;2 1 2 3 4 7 8 7 8 9 12 13 14 13 14 17 18 19 20 19]))
-%! assert (dst,single(repmat([0;3],1,20)))
+%! assert (dst2,single(repmat([0;3],1,20)))
 %
 %!test % 1 arg
 %! idx=annoctsearch(pts,pts,2);
