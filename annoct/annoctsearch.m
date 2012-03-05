@@ -1,40 +1,30 @@
 function [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
-% Copyright (C)  Gregory Jefferis
-%
-% This program is free software; you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation; either version 2 of the License, or
-% (at your option) any later version.
-%
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; If not, see <http://www.gnu.org/licenses/>.
-
 % -*- texinfo -*-
 % @deftypefn {Function File} [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
-% Returns indices (and squared distance) of k nearest neighbours of query in data
+% Return indices (and squared distance) of k nearest neighbours of query in data
 %
 % Usage:
-% [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
+% [@var{idx}, @var{dst2}] = annoctsearch (data, query, k, epsl, asm)
 % 
-% Inputs:
 % data  - d x N data points (if not single, will be converted with a warning)
+%
 % query - d x M query points (if not single, will be converted with a warning)
+%
 % k     - number of nearest neighbours to return
+%
 % epsl  - search radius for approximate search
+%
 % asm   - allow self matches (true by default)
 %
-% Outputs:
 % idx   - 1-indexed indices of matching points in data
+%
 % dst2  - squared distance from query points to neighbours in data
 %         (nb k neighbours are returned in ascending order of distance)
 % @end deftypefn
 %
-% Author:  Gregory Jefferis <jefferis@gmail.com>, shamelessly hacking Shai Bagon's code
+% Author:  Gregory Jefferis <jefferis@gmail.com>
+% annoctsearch wrapper function adapted from ksearch.m 
+% in Shai Bagon's matlab wrapper for ANN
 
 if nargin <= 2
 	usage('[idx, dst2] = annoctsearch (data, query, k, [epsl, asm])')
