@@ -18,10 +18,22 @@ function [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
 % @deftypefn {Function File} [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
 % Returns indices (and squared distance) of k nearest neighbours of query in data
 %
-% Long Description
+% Usage:
+% [idx, dst2] = annoctsearch (data, query, k, epsl, asm)
+% 
+% Inputs:
+% data  - d x N data points (if not single, will be converted with a warning)
+% query - d x M query points (if not single, will be converted with a warning)
+% k     - number of nearest neighbours to return
+% epsl  - search radius for approximate search
+% asm   - allow self matches (true by default)
 %
+% Outputs:
+% idx   - 1-indexed indices of matching points in data
+% dst2  - squared distance from query points to neighbours in data
+%         (nb k neighbours are returned in ascending order of distance)
 % @end deftypefn
-
+%
 % Author:  Gregory Jefferis <jefferis@gmail.com>, shamelessly hacking Shai Bagon's code
 
 if nargin <= 2
