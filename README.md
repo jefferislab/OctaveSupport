@@ -21,7 +21,7 @@ This package that I have written has not been properly released and is still ver
 
     [idx, dst] = annoctsearch (data, query, k, epsl, asm)
 
-annoctsearch allows a dxN set of query points to be matched against a dxM set of data points. The library currently defaults to float (single) input and output but can be compiled to expect double data. Queries are fast - self  
+annoctsearch allows a dxN set of query points to be matched against a dxM set of data points. The library currently defaults to float (single) input and output but can be compiled to expect double data.
 
 [ann]: http://www.cs.umd.edu/~mount/ANN/
 [oct]: http://www.gnu.org/software/octave/
